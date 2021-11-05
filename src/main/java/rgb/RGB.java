@@ -1,4 +1,4 @@
-package mx.umich.fismat.rgb;
+package rgb;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,10 +7,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Aplicacion extends Application {
+public class RGB extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxml = new FXMLLoader(Aplicacion.class.getResource("principal.fxml"));
+        FXMLLoader fxml = new FXMLLoader(RGB.class.getResource("principal.fxml"));
         Scene scene = new Scene(fxml.load());
         stage.setTitle(getClass().getSimpleName());
         stage.setScene(scene);
