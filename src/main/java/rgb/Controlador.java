@@ -6,7 +6,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 
 public class Controlador {
-    private int r = 0, g = 0, b = 0;
     @FXML
     private Preview preview;
     @FXML
@@ -22,7 +21,8 @@ public class Controlador {
     private void initialize() {
         preview.aplicarRGB();
 
-        DoubleProperty redSliderProperty = redSlider.valueProperty(),
+        DoubleProperty
+                redSliderProperty = redSlider.valueProperty(),
                 greenSliderProperty = greenSlider.valueProperty(),
                 blueSliderProperty = blueSlider.valueProperty();
 
@@ -30,17 +30,12 @@ public class Controlador {
         preview.gProperty().bind(greenSliderProperty);
         preview.bProperty().bind(blueSliderProperty);
 
-        redSliderProperty.addListener(l -> {
-            preview.aplicarRGB();
-        });
-        greenSliderProperty.addListener(l -> {
-            preview.aplicarRGB();
-        });
-        blueSliderProperty.addListener(l -> {
-            preview.aplicarRGB();
-        });
+        redSliderProperty.addListener(observable -> preview.aplicarRGB());
+        greenSliderProperty.addListener(observable -> preview.aplicarRGB());
+        blueSliderProperty.addListener(observable -> preview.aplicarRGB());
 
-        campos.textProperty().bind(redSliderProperty.asString("%.0f")
+        campos.textProperty().bind(
+                redSliderProperty.asString("%.0f")
                 .concat(greenSliderProperty.asString(", %.0f"))
                 .concat(blueSliderProperty.asString(", %.0f")));
     }
