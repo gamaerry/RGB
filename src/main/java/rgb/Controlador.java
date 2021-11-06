@@ -1,42 +1,61 @@
 package rgb;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 
 public class Controlador {
+
     @FXML
     private Preview preview;
     @FXML
     private TextField campos;
     @FXML
-    private Slider redSlider;
-    @FXML
-    private Slider greenSlider;
-    @FXML
-    private Slider blueSlider;
+    private Slider rSlider, gSlider, bSlider;
 
     @FXML
     private void initialize() {
+        //Aplicar el color por defecto RGB(0, 0, 0)
         preview.aplicarRGB();
 
-        DoubleProperty
-                redSliderProperty = redSlider.valueProperty(),
-                greenSliderProperty = greenSlider.valueProperty(),
-                blueSliderProperty = blueSlider.valueProperty();
+        //Definición de las properties del texto del TextField y de los valores de los Sliders
+        StringProperty textProperty = campos.textProperty();
+        DoubleProperty rSliderProperty = rSlider.valueProperty(),
+                gSliderProperty = gSlider.valueProperty(),
+                bSliderProperty = bSlider.valueProperty();
 
-        preview.rProperty().bind(redSliderProperty);
-        preview.gProperty().bind(greenSliderProperty);
-        preview.bProperty().bind(blueSliderProperty);
+        //Hacer reaccionar los valores r, g, b del preview a los valores de los Sliders
+        preview.rProperty().bind(rSliderProperty);
+        preview.gProperty().bind(gSliderProperty);
+        preview.bProperty().bind(bSliderProperty);
 
-        redSliderProperty.addListener(observable -> preview.aplicarRGB());
-        greenSliderProperty.addListener(observable -> preview.aplicarRGB());
-        blueSliderProperty.addListener(observable -> preview.aplicarRGB());
+        //Aplicar los cambios cada que se modifiquen los valores de los Sliders
+        rSliderProperty.addListener(observable -> preview.aplicarRGB());
+        gSliderProperty.addListener(observable -> preview.aplicarRGB());
+        bSliderProperty.addListener(observable -> preview.aplicarRGB());
 
-        campos.textProperty().bind(
-                redSliderProperty.asString("%.0f")
-                .concat(greenSliderProperty.asString(", %.0f"))
-                .concat(blueSliderProperty.asString(", %.0f")));
+        //Hacer reaccionar los valores de los Sliders al texto del TextField
+        textProperty.addListener((observable, old, actualString) -> {
+            if (actualString.matches(" *\\d+, *\\d+, *\\d+ *")) {
+                final String[] RGB = actualString.split(",");
+                rSlider.setValue(Double.parseDouble(RGB[0].trim()));
+                gSlider.setValue(Double.parseDouble(RGB[1].trim()));
+                bSlider.setValue(Double.parseDouble(RGB[2].trim()));
+            }
+        });
+
+        //Activar y desactivar (según se enfoque el TextField) la reacción del texto del TextField a los valores de los Sliders
+        //(Es necesario desactivarlo pues al estar activo el enlace, no se puede modificar el TextField)
+        campos.focusedProperty().addListener((observable, old, isNowFocused) -> {
+            if (isNowFocused)
+                textProperty.unbind();
+            else
+                textProperty.bind(rSliderProperty.asString("%.0f")
+                        .concat(gSliderProperty.asString(", %.0f"))
+                        .concat(bSliderProperty.asString(", %.0f"))
+                );
+        });
     }
 }

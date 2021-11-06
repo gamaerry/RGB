@@ -20,7 +20,7 @@
     <Preview prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" fx:id="preview"/>
     <HBox alignment="CENTER">
         <Label alignment="CENTER" text="RGB("/>
-        <TextField maxWidth="110.0" promptText="255,255,255" fx:id="campos"/>
+        <TextField maxWidth="110.0" text="0, 0, 0" fx:id="campos"/>
         <Label text=")"/>
     </HBox>
     <GridPane>
@@ -34,11 +34,11 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
         </rowConstraints>
         <Slider max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1"
-                fx:id="redSlider"/>
-        <Slider max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true"
-                GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="greenSlider"/>
+                fx:id="rSlider"/>
         <Slider max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1"
-                GridPane.rowIndex="2" fx:id="blueSlider"/>
+                GridPane.rowIndex="1" fx:id="gSlider"/>
+        <Slider max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1"
+                GridPane.rowIndex="2" fx:id="bSlider"/>
         <Label text="RED" GridPane.halignment="CENTER"/>
         <Label text="GREEN" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
         <Label text="BLUE" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
