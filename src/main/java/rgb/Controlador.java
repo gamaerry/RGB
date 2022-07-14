@@ -2,7 +2,9 @@ package rgb;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 
@@ -14,11 +16,14 @@ public class Controlador {
     private TextField campos;
     @FXML
     private Slider rSlider, gSlider, bSlider;
+    @FXML
+    private CheckBox fijar;
 
     @FXML
     private void initialize() {
         //Aplicar el color por defecto RGB(0, 0, 0)
         preview.aplicarRGB();
+
 
         //Definición de las properties del texto del TextField y de los valores de los Sliders
         StringProperty textProperty = campos.textProperty();
@@ -57,5 +62,7 @@ public class Controlador {
                         .concat(bSliderProperty.asString(", %.0f"))
                 );
         });
+
+        fijar.selectedProperty().addListener((observable, old, isNowSelected) -> {});
     }
 }
