@@ -10,13 +10,11 @@ import java.io.IOException;
 public class RGB extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxml = new FXMLLoader(RGB.class.getResource("principal.fxml"));
-        Scene scene = new Scene(fxml.load());
+        var escena = new Scene(new FXMLLoader(RGB.class.getResource("principal.fxml")).load());
         stage.setTitle(getClass().getSimpleName());
-        stage.setScene(scene);
+        stage.setScene(escena);
         stage.show();
     }
-
     public static void main(String[] args) {
         launch();
     }
