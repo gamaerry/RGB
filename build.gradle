@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'org.beryx.jlink' version '2.24.4'
 }
 version '1.0'
 
@@ -24,4 +25,19 @@ application {
 javafx {
     version = '11.0.2'
     modules = ['javafx.controls', 'javafx.fxml']
+}
+
+jlink {
+    launcher {
+        name = 'RGB'
+    }
+    properties {
+        imageZip = file("$buildDir/RGB.zip")
+    }
+}
+jar {
+  manifest {
+    attributes 'Main-Module' : 'rgb'
+    attributes 'Main-Class' : 'rgb.RGB'
+  }
 }
