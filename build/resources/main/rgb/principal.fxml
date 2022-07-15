@@ -30,9 +30,12 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <Slider fx:id="deslizadorR" max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" />
-        <Slider fx:id="deslizadorG" max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Slider fx:id="deslizadorB" max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Slider fx:id="deslizadorR" min="0.0" max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" />
+        <Slider fx:id="deslizadorG" min="0.0" max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Slider fx:id="deslizadorB" min="0.0" max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Slider fx:id="deslizadorAuxR" min="0.0" max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" />
+        <Slider fx:id="deslizadorAuxG" min="0.0" max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Slider fx:id="deslizadorAuxB" min="0.0" max="255.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Label text="RED" GridPane.halignment="CENTER" />
         <Label text="GREEN" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
         <Label text="BLUE" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
