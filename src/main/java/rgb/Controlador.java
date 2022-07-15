@@ -6,7 +6,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 
+import java.util.ArrayList;
+
 public class Controlador {
+    private final ArrayList<Slider> deslizadores = new ArrayList<>(), deslizadoresAux = new ArrayList<>();
     @FXML
     private Vista vista;
     @FXML
@@ -21,7 +24,15 @@ public class Controlador {
         //Aplicar el color por defecto RGB(0, 0, 0)
         vista.aplicarRGB();
 
+        //A lo largo del codigo los indices 0, 1, 2 representan R, G, B respectivamente
+        deslizadores.add(deslizadorR);
+        deslizadores.add(deslizadorG);
+        deslizadores.add(deslizadorB);
+
         //Hacer invisible a los deslizadores auxiliares
+        deslizadoresAux.add(deslizadorAuxR);
+        deslizadoresAux.add(deslizadorAuxG);
+        deslizadoresAux.add(deslizadorAuxB);
         deslizadorAuxR.setVisible(false);
         deslizadorAuxG.setVisible(false);
         deslizadorAuxB.setVisible(false);
@@ -33,21 +44,15 @@ public class Controlador {
 
         //Aplicar los cambios cada que se modifiquen los valores de los Sliders
         // y hacer invisibles si son menores que cero o mayores que 255
-        deslizadorR.valueProperty().addListener((observable, valorAnterior, valorActual) ->
-                invisibleSiFueraDeRango(valorActual.doubleValue() < 0,
-                        valorActual.doubleValue() > 255, deslizadorR, deslizadorAuxR));
-        deslizadorG.valueProperty().addListener((observable, valorAnterior, valorActual) ->
-                invisibleSiFueraDeRango(valorActual.doubleValue() < 0,
-                        valorActual.doubleValue() > 255, deslizadorG, deslizadorAuxG));
-        deslizadorB.valueProperty().addListener((observable, valorAnterior, valorActual) ->
-                invisibleSiFueraDeRango(valorAnterior.doubleValue() < 0,
-                        valorAnterior.doubleValue() > 255, deslizadorB, deslizadorAuxB));
+        deslizadorR.valueProperty().addListener(invisibleSiFueraDeRango(0));
+        deslizadorG.valueProperty().addListener(invisibleSiFueraDeRango(1));
+        deslizadorB.valueProperty().addListener(invisibleSiFueraDeRango(2));
 
         //Cuando termine de estar "cambiandose" el valor del deslizador se cambiará
         // a 0 o 255 segun corresponda
-        deslizadorR.valueChangingProperty().addListener(arreglarSiEranInvisibles());
-        deslizadorG.valueChangingProperty().addListener(arreglarSiEranInvisibles());
-        deslizadorB.valueChangingProperty().addListener(arreglarSiEranInvisibles());
+        deslizadorR.valueChangingProperty().addListener(arreglarSiEranInvisibles(1, 2));
+        deslizadorG.valueChangingProperty().addListener(arreglarSiEranInvisibles(0, 2));
+        deslizadorB.valueChangingProperty().addListener(arreglarSiEranInvisibles(0, 1));
 
         //Hacer reaccionar los valores de los deslizadores al texto del TextField
         campos.textProperty().addListener((observable, stringAnterior, stringActual) -> {
@@ -71,9 +76,9 @@ public class Controlador {
         });
 
         //Fijar deslizadores cuando checkbox este seleccionado
-        var enlazarR = enlazarColores(deslizadorR, deslizadorG, deslizadorB);
-        var enlazarG = enlazarColores(deslizadorG, deslizadorB, deslizadorR);
-        var enlazarB = enlazarColores(deslizadorB, deslizadorR, deslizadorG);
+        var enlazarR = enlazarColores(1, 2);
+        var enlazarG = enlazarColores(0, 2);
+        var enlazarB = enlazarColores(0, 1);
         fijar.selectedProperty().addListener((observable, estabaSeleccionado, estaSeleccionado) -> {
             if (estaSeleccionado) {
                 deslizadorR.valueChangingProperty().addListener(enlazarR);
@@ -87,61 +92,64 @@ public class Controlador {
         });
     }
 
-    private ChangeListener<? super Boolean> arreglarSiEranInvisibles() {
+    private ChangeListener<Number> invisibleSiFueraDeRango(int i) {
+        return (observable, valorAnterior, valorActual) -> {
+            if (fijar.isSelected()) {
+                var principal = deslizadores.get(i);
+                var aux = deslizadoresAux.get(i);
+                if (valorActual.doubleValue() < 0) {
+                    aux.setValue(0);
+                    aux.setVisible(true);
+                    principal.setVisible(false);
+                } else if (valorActual.doubleValue() > 255) {
+                    aux.setValue(255);
+                    aux.setVisible(true);
+                    principal.setVisible(false);
+                } else {
+                    aux.setVisible(false);
+                    principal.setVisible(true);
+                }
+            }
+            vista.aplicarRGB();
+        };
+    }
+
+    private ChangeListener<Boolean> arreglarSiEranInvisibles(int i1, int i2) {
         return (observable, estabaCambiando, estaCambiando) -> {
-            if (estabaCambiando) {
-                if (!deslizadorR.isVisible()) {
-                    deslizadorR.valueProperty().unbind();
-                    deslizadorR.setValue(deslizadorR.getValue() < 0 ? 0 : 255);
-                    deslizadorR.setVisible(true);
-                    deslizadorAuxR.setVisible(false);
+            if (estabaCambiando && fijar.isSelected()) {
+                var deslizador1 = deslizadores.get(i1);
+                var deslizador2 = deslizadores.get(i2);
+                if (!deslizador1.isVisible()) {
+                    deslizador1.valueProperty().unbind();
+                    deslizador1.setValue(deslizador1.getValue() < 0 ? 0 : 255);
+                    deslizador1.setVisible(true);
+                    deslizadoresAux.get(i1).setVisible(false);
                 }
-                if (!deslizadorG.isVisible()) {
-                    deslizadorG.valueProperty().unbind();
-                    deslizadorG.setValue(deslizadorG.getValue() < 0 ? 0 : 255);
-                    deslizadorG.setVisible(true);
-                    deslizadorAuxG.setVisible(false);
-                }
-                if (!deslizadorB.isVisible()) {
-                    deslizadorB.valueProperty().unbind();
-                    deslizadorB.setValue(deslizadorB.getValue() < 0 ? 0 : 255);
-                    deslizadorB.setVisible(true);
-                    deslizadorAuxB.setVisible(false);
+                if (!deslizador2.isVisible()) {
+                    deslizador2.valueProperty().unbind();
+                    deslizador2.setValue(deslizador2.getValue() < 0 ? 0 : 255);
+                    deslizador2.setVisible(true);
+                    deslizadoresAux.get(i2).setVisible(false);
                 }
             }
         };
     }
 
-    private void invisibleSiFueraDeRango(boolean menorQueCero, boolean mayorQue255, Slider principal, Slider aux) {
-        if (menorQueCero) {
-            aux.setValue(0);
-            aux.setVisible(true);
-            principal.setVisible(false);
-        } else if (mayorQue255) {
-            aux.setValue(255);
-            aux.setVisible(true);
-            principal.setVisible(false);
-        } else {
-            aux.setVisible(false);
-            principal.setVisible(true);
-        }
-        vista.aplicarRGB();
-    }
-
-    private ChangeListener<? super Boolean> enlazarColores(Slider principal, Slider... secundarios) {
+    private ChangeListener<Boolean> enlazarColores(int i1, int i2) {
+        var principal = deslizadores.get(2 * (i1 + i2) % 3);
         return (observable, cambioAntes, cambioAhora) -> {
             if (cambioAhora) {
-                secundarios[0].valueProperty().bind(
+                deslizadores.get(i1).valueProperty().bind(
                         principal.valueProperty().add(
-                                secundarios[0].valueProperty().get() - principal.valueProperty().get()));
-                secundarios[1].valueProperty().bind(
+                                deslizadores.get(i1).valueProperty().get() - principal.valueProperty().get()));
+                deslizadores.get(i2).valueProperty().bind(
                         principal.valueProperty().add(
-                                secundarios[1].valueProperty().get() - principal.valueProperty().get()));
+                                deslizadores.get(i2).valueProperty().get() - principal.valueProperty().get()));
             }
             if (cambioAntes) {
                 principal.valueProperty().unbind();
-                secundarios[0].valueProperty().unbind();
-                secundarios[1].valueProperty().unbind();
+                deslizadores.get(i1).valueProperty().unbind();
+                deslizadores.get(i2).valueProperty().unbind();
             }
         };
     }
